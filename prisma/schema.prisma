@@ -18,7 +18,7 @@ model Recipe {
   published Boolean   @default(false)
   userId    String
   user      User      @relation(fields: [userId], references: [id])
-  Comment   Comment[]
+  comments  Comment[]
 }
 
 model Comment {
@@ -66,8 +66,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  Recipe        Recipe[]
-  Comment       Comment[]
+  recipes       Recipe[]
+  comments      Comment[]
 }
 
 model VerificationToken {

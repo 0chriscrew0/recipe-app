@@ -4,6 +4,7 @@ import axios from "axios";
 import AddRecipe from "./components/AddRecipe";
 import { useQuery } from "@tanstack/react-query";
 import Recipe from "./components/Recipe";
+import { RecipeType } from "./types/Recipe";
 
 // Get all recipes
 const allRecipes = async () => {
@@ -12,7 +13,7 @@ const allRecipes = async () => {
 };
 
 export default function Home() {
-  const { data, error, isLoading } = useQuery({
+  const { data, error, isLoading } = useQuery<RecipeType[]>({
     queryFn: allRecipes,
     queryKey: ["recipes"],
   });
@@ -29,6 +30,7 @@ export default function Home() {
           name={recipe.user.name}
           avatar={recipe.user.image}
           title={recipe.title}
+          comments={recipe.comments}
         />
       ))}
     </main>
