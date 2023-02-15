@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 export default function CreateRecipe() {
   const [title, setTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
+  const queryClient = useQueryClient();
 
   let toastRecipeID: string;
 
@@ -24,6 +25,7 @@ export default function CreateRecipe() {
       },
       onSuccess: (data) => {
         toast.success("Recipe created succesfully!", { id: toastRecipeID });
+        queryClient.invalidateQueries(["recipes"]);
         setTitle("");
         setIsDisabled(false);
       },
