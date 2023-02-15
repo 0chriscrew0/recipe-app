@@ -12,6 +12,7 @@ export default async function handler(
       const data = await prisma.recipe.findMany({
         include: {
           user: true,
+          Comment: true,
         },
         orderBy: {
           createdAt: "desc",
