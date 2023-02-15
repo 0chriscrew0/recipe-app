@@ -2,11 +2,14 @@
 
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 export default function CreateRecipe() {
   const [title, setTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
+
+  let toastRecipeID: string;
 
   // Create Recipe
   const { mutate } = useMutation(
@@ -14,10 +17,13 @@ export default function CreateRecipe() {
       await axios.post("/api/recipes/addRecipe", { title }),
     {
       onError: (error) => {
-        console.log(error);
+        if (error instanceof AxiosError) {
+          toast.error(error?.response?.data.message, { id: toastRecipeID });
+        }
+        setIsDisabled(false);
       },
       onSuccess: (data) => {
-        console.log(data);
+        toast.success("Recipe created succesfully!", { id: toastRecipeID });
         setTitle("");
         setIsDisabled(false);
       },
@@ -25,6 +31,7 @@ export default function CreateRecipe() {
   );
 
   const submitRecipe = async (e: React.FormEvent) => {
+    toastRecipeID = toast.loading("Creating Recipe...", { id: toastRecipeID });
     e.preventDefault();
     setIsDisabled(true);
     mutate(title);
