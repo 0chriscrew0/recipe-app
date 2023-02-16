@@ -1,4 +1,4 @@
-export type RecipeType = {
+export type RecipesType = {
   id: string;
   title: string;
   createdAt: string;

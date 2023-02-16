@@ -1,7 +1,5 @@
 "use client";
 
-import { Viaoda_Libre } from "@next/font/google";
-
 type ToggleProps = {
   deleteRecipe: () => void;
   setToggle: (toggle: boolean) => void;
