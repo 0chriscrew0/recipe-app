@@ -26,6 +26,7 @@ export default function AddComment({ id }: RecipeProps) {
       onSuccess: (data) => {
         setTitle("");
         setIsDisabled(false);
+        queryClient.invalidateQueries(["detail-recipe"]);
         toast.success("Comment added", { id: commentToastId });
       },
       onError: (error) => {
@@ -41,7 +42,6 @@ export default function AddComment({ id }: RecipeProps) {
     e.preventDefault();
     setIsDisabled(true);
     commentToastId = toast.loading("Adding comment...", { id: commentToastId });
-    console.log(title, id);
     mutate({ title, id });
   };
 

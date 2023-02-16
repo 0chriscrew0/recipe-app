@@ -7,9 +7,13 @@ export type RecipeType = {
     image: string;
   };
   comments?: {
+    message: string;
     createdAt: string;
     id: string;
     postId: string;
-    userId: string;
+    user: {
+      name: string;
+      image: string;
+    };
   }[];
 };
