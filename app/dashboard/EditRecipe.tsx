@@ -1,10 +1,11 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
 import Toggle from "./Toggle";
+import toast from "react-hot-toast";
 
 type EditProps = {
   id: string;
@@ -26,21 +27,25 @@ export default function EditRecipe({
   id,
 }: EditProps) {
   const [toggle, setToggle] = useState(false);
+  let deleteToastID: string;
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation(
     async (id: string) =>
       await axios.delete("/api/recipes/deleteRecipe", { data: id }),
     {
       onError: (error) => {
-        console.log(error);
+        toast.error("Error deleting recipe", { id: deleteToastID });
       },
       onSuccess: (data) => {
-        console.log(data);
+        toast.success("Recipe deleted", { id: deleteToastID });
+        queryClient.invalidateQueries(["auth-recipes"]);
       },
     }
   );
 
   const deleteRecipe = () => {
+    deleteToastID = toast.loading("Deleting recipe...");
     mutate(id);
   };
 
