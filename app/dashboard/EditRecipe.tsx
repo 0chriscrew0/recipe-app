@@ -1,5 +1,7 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
 import Toggle from "./Toggle";
@@ -23,6 +25,25 @@ export default function EditRecipe({
   comments,
   id,
 }: EditProps) {
+  const [toggle, setToggle] = useState(false);
+
+  const { mutate } = useMutation(
+    async (id: string) =>
+      await axios.delete("/api/recipes/deleteRecipe", { data: id }),
+    {
+      onError: (error) => {
+        console.log(error);
+      },
+      onSuccess: (data) => {
+        console.log(data);
+      },
+    }
+  );
+
+  const deleteRecipe = () => {
+    mutate(id);
+  };
+
   return (
     <>
       <div className='bg-white my-8 p-8 rounded-lg'>
@@ -37,12 +58,17 @@ export default function EditRecipe({
           <p className='text-sm font-bold text-gray-700'>
             {comments?.length} comments
           </p>
-          <button className='text-sm font-bold text-white px-4 py-2 bg-red-500'>
+          <button
+            onClick={(e) => {
+              setToggle(true);
+            }}
+            className='text-sm font-bold text-white px-4 py-2 bg-red-500'
+          >
             Delete
           </button>
         </div>
       </div>
-      <Toggle />
+      {toggle && <Toggle deleteRecipe={deleteRecipe} setToggle={setToggle} />}
     </>
   );
 }
